@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalanche Prediction GUI</title>
+    <style>
+        body {
+            background-image: url("C://Users//91810//Downloads//avalanche3.jpg");
+            /* Replace 'background_image.jpg' with your image file path */
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            margin: 10% auto;
+            width: 80%;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Responsive layout - makes the menu and the content stack on top of each other */
+        @media (min-width: 600px) {
+            .container {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Avalanche Prediction GUI</h2>
+    <form id="predictionForm">
+        <input type="text" id="intermittence" placeholder="Intermittence">
+        <input type="text" id="humidity" placeholder="Relative Humidity">
+        <input type="text" id="snowDepth" placeholder="Total Snow Depth">
+        <input type="text" id="temperature" placeholder="Temperature">
+        
+        <button type="button" onclick="predict()">Predict</button>
+    </form>
+    <p id="result"></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function predict() {
+        // Get input values
+        var temperature = parseFloat(document.getElementById('temperature').value);
+        var humidity = parseFloat(document.getElementById('humidity').value);
+        var intermittence = parseFloat(document.getElementById('intermittence').value);
+        var snowDepth = parseFloat(document.getElementById('snowDepth').value);
+
+        // Perform prediction or send data to API
+        $.ajax({
+            type: 'POST',
+            url: 'https://211a-2401-4900-632d-b354-9172-9600-6bfc-7dd.ngrok-free.app/predict', // Use the relative path to your Flask API endpoint
+            contentType: 'application/json',
+            headers: {
+                Accept:"application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            data: JSON.stringify({'dataVal': [intermittence,humidity,snowDepth,temperature]}),
+           
+            success: function (data) {
+                // Display the prediction result
+                console.log('succcess');
+                document.getElementById('result').innerText = 'Prediction: ' + data.results[0].prediction;
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+</script>
+</body>
+
+</html>
